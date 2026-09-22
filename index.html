@@ -9,6 +9,354 @@
             background-color: #2b2b2b;
             color: #e0e0e0;
             text-align: center;
+            padding: 20px 20px 50px 20px;
+            margin: 0;
+        }
+        
+        /* ВЕРХНЯЯ ПАНЕЛЬ С ПРОФИЛЕМ */
+        .top-header {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto 30px auto;
+            position: relative;
+        }
+
+        /* Контейнер профиля */
+        .user-profile {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            background-color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #444;
+            transition: 0.3s;
+            user-select: none;
+        }
+        .user-profile:hover {
+            border-color: #ff6b6b;
+        }
+
+        /* Аватарка */
+        .profile-avatar {
+            width: 35px;
+            height: 35px;
+            background-color: #ff6b6b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2b2b2b;
+            font-size: 14px;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Информация о пользователе */
+        .profile-info {
+            text-align: left;
+        }
+        .profile-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #e0e0e0;
+        }
+        .profile-status {
+            font-size: 11px;
+            color: #ff6b6b;
+        }
+
+        /* Выпадающее меню профиля */
+        .profile-dropdown {
+            position: absolute;
+            top: 55px;
+            left: 0;
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 6px;
+            width: 220px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            text-align: left;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: 0.3s ease-in-out;
+        }
+        .profile-dropdown.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Пункты меню */
+        .dropdown-item {
+            padding: 12px 16px;
+            color: #cccccc;
+            font-size: 14px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #444;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        .dropdown-item:hover {
+            background-color: #444;
+            color: #ff6b6b;
+        }
+
+        /* МОДАЛЬНОЕ ОКНО НАСТРОЕК */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+        .modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: #333;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            text-align: left;
+            border: 1px solid #ff6b6b;
+        }
+        .modal-content h3 {
+            margin-top: 0;
+            color: #ff6b6b;
+        }
+        .modal-content label {
+            display: block;
+            margin: 15px 0 5px 0;
+            font-size: 14px;
+            color: #b0b0b0;
+        }
+        .modal-content input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            background: #2b2b2b;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .modal-content input[type="file"] {
+            color: #b0b0b0;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .modal-actions {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .btn-save {
+            background: #ff6b6b;
+            color: #2b2b2b;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-cancel {
+            background: #444;
+            color: #ccc;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* ОСНОВНОЙ КОНТЕНТ СТРАНИЦЫ */
+        h1 { 
+            color: #ff6b6b; 
+            font-size: 38px; 
+            text-shadow: 2px 2px 4px #000;
+            margin-bottom: 10px;
+        }
+        p.subtitle { 
+            color: #b0b0b0; 
+            font-size: 20px; 
+            max-width: 600px;
+            margin: 20px auto;
+            line-height: 1.6;
+        }
+        .button {
+            display: inline-block;
+            background-color: #444;
+            color: #ff6b6b;
+            padding: 14px 28px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #ff6b6b;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .button:hover { 
+            background-color: #ff6b6b; 
+            color: #2b2b2b;
+        }
+        
+        /* Контейнер списка */
+        .places-list {
+            max-width: 800px;
+            margin: 40px auto 0 auto;
+            opacity: 0;
+            visibility: hidden;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.6s ease-in-out, max-height 0.6s ease-in-out, visibility 0.6s;
+        }
+        .places-list.show {
+            opacity: 1;
+            visibility: visible;
+            max-height: 4000px;
+        }
+        
+        /* Карточка заброшки */
+        .place-card {
+            background-color: #333;
+            margin-bottom: 30px;
+            border-radius: 6px;
+            border-left: 4px solid #ff6b6b;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            text-align: left;
+            position: relative;
+        }
+        .place-img {
+            width: 250px;
+            height: auto;
+            border-radius: 4px;
+            flex-shrink: 0;
+            border: 1px solid #444;
+        }
+        .place-info {
+            flex-grow: 1;
+            padding-right: 40px;
+        }
+        .place-title {
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        .place-text {
+            color: #cccccc;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .place-text p {
+            margin: 0 0 10px 0;
+        }
+        .place-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* КНОПКА ИЗБРАННОГО (СЕРДЕЧКО) */
+        .favorite-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #555;
+            transition: transform 0.2s, color 0.2s;
+            user-select: none;
+        }
+        .favorite-btn.active {
+            color: #ff6b6b;
+            transform: scale(1.2);
+        }
+        .favorite-btn:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 650px) {
+            .place-card {
+                flex-direction: column;
+                align-items: center;
+            }
+            .place-img {
+                width: 100%;
+                max-width: 400px;
+            }
+            .favorite-btn {
+                top: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ВЕРХНЯЯ ПАНЕЛЬ С ПРОФИЛЕМ -->
+    <div class="top-header">
+        <div class="user-profile" onclick="toggleProfileMenu(event)">
+            <div id="userAvatar" class="profile-avatar">С</div>
+            <div class="profile-info">
+                <div id="userName" class="profile-name">Сталкер_23</div>
+                <div class="profile-status">Ранг: Исследователь</div>
+            </div>
+            
+            <div id="profileMenu" class="profile-dropdown">
+                <div class="dropdown-item" onclick="filterFavorites(event)">🎒 Мой блокнот (<span id="favCount">0</span>)</div>
+                <div class="dropdown-item" onclick="openModal(event)">⚙️ Настройки профиля</div>
+                <div class="dropdown-item" style="color: #ff6b6b;" onclick="resetProfile(event)">🚪 Сбросить всё</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ ПРОФИЛЯ -->
+    <div id="profileModal" class="modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3>Настройки профиля</h3>
+            
+            <label for="inputName">Имя пользователя (никнейм):</label>
+            <input type="text" id="inputName" placeholder="Введите никнейм">
+            
+            <label for="inputAvatar">Загрузить аватарку из галереи:</label>
+            <input type="file" id="inputAvatar" accept="image/*">
+            
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">Отмена</button>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Заброшенные места Краснодарского края</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #2b2b2b;
+            color: #e0e0e0;
+            text-align: center;
             padding: 50px 20px;
         }
         h1 { 
