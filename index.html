@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Заброшенные места Краснодарского края</title>
+    <!-- Подключаем API Яндекс Карт (версия 2.1) -->
+    <script src="https://yandex.ru" type="text/javascript"></script>
     <style>
         body {
             font-family: sans-serif;
@@ -43,6 +45,17 @@
             color: #2b2b2b;
         }
         
+        /* Стили для контейнера карты */
+        #map {
+            width: 100%;
+            max-width: 800px;
+            height: 450px;
+            margin: 20px auto 40px auto;
+            border-radius: 8px;
+            border: 2px solid #ff6b6b;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        
         /* Блок списка с поддержкой плавной CSS-анимации */
         .places-list {
             max-width: 800px;
@@ -58,7 +71,7 @@
         .places-list.show {
             opacity: 1;
             visibility: visible;
-            max-height: 4000px; /* Запас высоты, чтобы вместить все карточки */
+            max-height: 4000px; 
         }
         
         /* Карточка заброшки */
@@ -73,7 +86,6 @@
             align-items: flex-start;
             text-align: left;
         }
-        /* Оформление картинок */
         .place-img {
             width: 250px;
             height: auto;
@@ -101,7 +113,6 @@
         .place-text p:last-child {
             margin-bottom: 0;
         }
-        /* Адаптивность для мобильных устройств */
         @media (max-width: 650px) {
             .place-card {
                 flex-direction: column;
@@ -111,6 +122,9 @@
                 width: 100%;
                 max-width: 400px;
             }
+            #map {
+                height: 300px;
+            }
         }
     </style>
 </head>
@@ -119,24 +133,27 @@
     <h1>Заброшки Краснодарского края</h1>
     <p class="subtitle">Исследуем самые интересные, загадочные и покинутые места Кубани: от старых советских санаториев и усадеб до военных бункеров и кораблей, выброшенных на берег.</p>
     
+    <!-- Интерактивная карта Яндекс -->
+    <div id="map"></div>
+
     <!-- Кнопка переключения списка -->
     <div id="toggleBtn" class="button" onclick="showPlaces()">Смотреть список мест</div>
 
     <div id="placesBlock" class="places-list">
         
-        <!-- Первая заброшка: Губернского, 6 -->
-        <div class="place-card">
+        <!-- Первая заброшка -->
+        <div class="place-card" id="place-gubernskogo">
             <img src="images.jpeg" alt="Здание на ул. Губернского" class="place-img">
             <div class="place-info">
                 <div class="place-title">Здание на ул. Губернского, 6 (Новороссийск)</div>
                 <div class="place-text">
-                    <p>Полуразрушенное заброшенное здание возвышается рядом с площадью Героев на улице Губернского, 6. Там выбиты почти все стёкла, уже отсутствуют куски стен. Несколько раз здесь случаছিলেন немаленькие пожары.</p>
+                    <p>Полуразрушенное заброшенное здание возвышается рядом с площадью Героев на улице Губернского, 6. Там выбиты почти все стёкла, уже отсутствуют куски стен. Несколько раз здесь случались немаленькие пожары.</p>
                 </div>
             </div>
         </div>
         
-        <!-- Вторая заброшка: Тобольская -->
-        <div class="place-card">
+        <!-- Вторая заброшка -->
+        <div class="place-card" id="place-tobolskaya">
             <img src="imageszab1.jpeg" alt="Недострой на ул. Тобольской" class="place-img">
             <div class="place-info">
                 <div class="place-title">Недостроенная многоэтажка на ул. Тобольской (Новороссийск)</div>
@@ -146,8 +163,8 @@
             </div>
         </div>
 
-        <!-- Третья заброшка: Видова и Щорса -->
-        <div class="place-card">
+        <!-- Третья заброшка -->
+        <div class="place-card" id="place-vidova">
             <img src="imageszab2.jpeg" alt="Недострой на Видова и Щорса" class="place-img">
             <div class="place-info">
                 <div class="place-title">Перекресток Видова и Щорса (Новороссийск)</div>
@@ -158,8 +175,8 @@
             </div>
         </div>
         
-        <!-- Четвертая заброшка: Троллейбусное депо -->
-        <div class="place-card">
+        <!-- Четвертая заброшка -->
+        <div class="place-card" id="place-depo">
             <img src="zab4.jpeg" alt="Заброшенное троллейбусное депо" class="place-img">
             <div class="place-info">
                 <div class="place-title">Заброшенное троллейбусное депо в Южном районе (Новороссийск)</div>
@@ -170,37 +187,41 @@
             </div>
         </div>
 
-        <!-- Пятая заброшка: Цементный завод Октябрь (ТЕКСТ ВОССТАНОВЛЕН И ЗАКРЫТ) -->
-        <div class="place-card">
+        <!-- Пятая заброшка -->
+        <div class="place-card" id="place-oktyabr">
             <img src="zab3.jpeg" alt="Заброшенный завод Октябрь" class="place-img">
             <div class="place-info">
                 <div class="place-title">Заброшенный цементный завод «Октябрь» (Восточный район)</div>
                 <div class="place-text">
-                    <p>Один из самых грандиозных и монументальных памятников советской индустриальной эпохи на Кубани. С самого момента основания завод непрерывно наращивал мощности, модернизировал оборудование и в свои лучшие годы считался одним из самых передовых и эффективных производств цемента во всем мире. На пике своей активности предприятие выдавало колоссальные объемы продукции — более 2 миллионов тонн цемента ежегодно.</p>
-                    <p>Окончательно производство остановилось в 2014 году, после чего огромная индустриальная территория оказалась заброшена, а величественные цеха начали медленно разрушаться временем.</p>
+                    <p>Один из самых грандиозных и монументальных памятников советской индустриальной эпохи на Кубани. С самого момента основания завод непрерывно наращивал мощности, модернизировал оборудование и в свои лучшие годы считался одним из самых передовых и эффективных производств цемента во всем мире. На пике своей активности предприятие выдавало колоссальные объемы продукции.</p>
+                    <p>Однако после распада СССР и затяжного экономического кризиса завод не смог адаптироваться к новым рыночным условиям. Производство постепенно сокращалось, пока окончательно не остановилось. Сейчас гигантские цеха, массивные силосные башни и ржавеющие конвейерные линии привлекают лишь любителей индустриального туризма и атмосферных фотографий.</p>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- Логика работы кнопки и плавной анимации -->
+    <!-- JavaScript для управления видимостью списка и инициализации карты -->
     <script>
+        // Функция переключения списка мест
         function showPlaces() {
-            var block = document.getElementById('placesBlock');
-            var btn = document.getElementById('toggleBtn');
+            var block = document.getElementById("placesBlock");
+            var btn = document.getElementById("toggleBtn");
             
-            // Добавляем или удаляем класс видимости
-            block.classList.toggle('show');
+            block.classList.toggle("show");
             
-            // Интерактивно меняем надпись на кнопке
-            if (block.classList.contains('show')) {
-                btn.innerText = 'Скрыть список';
+            if (block.classList.contains("show")) {
+                btn.textContent = "Скрыть список мест";
             } else {
-                btn.innerText = 'Смотреть список мест';
+                btn.textContent = "Смотреть список мест";
             }
         }
-    </script>
 
-</body>
-</html>
+        // Инициализация Яндекс Карт
+        ymaps.ready(init);
+        function init(){
+            // Создание карты с центром в Новороссийске
+            var myMap = new ymaps.Map("map", {
+                center: [44.7244, 37.7675],
+                zoom: 12,
+                controls: ['zoomControl', 'fullscreenControl']
