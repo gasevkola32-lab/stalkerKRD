@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Заброшенные места Краснодарского края</title>
-    <!-- Подключаем API Яндекс Карт (версия 2.1) -->
-    <script src="https://yandex.ru" type="text/javascript"></script>
     <style>
         body {
             font-family: sans-serif;
@@ -45,17 +43,6 @@
             color: #2b2b2b;
         }
         
-        /* Стили для контейнера карты */
-        #map {
-            width: 100%;
-            max-width: 800px;
-            height: 450px;
-            margin: 20px auto 40px auto;
-            border-radius: 8px;
-            border: 2px solid #ff6b6b;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-        
         /* Блок списка с поддержкой плавной CSS-анимации */
         .places-list {
             max-width: 800px;
@@ -71,7 +58,7 @@
         .places-list.show {
             opacity: 1;
             visibility: visible;
-            max-height: 4000px; 
+            max-height: 4000px; /* Запас высоты, чтобы вместить все карточки */
         }
         
         /* Карточка заброшки */
@@ -86,6 +73,7 @@
             align-items: flex-start;
             text-align: left;
         }
+        /* Оформление картинок */
         .place-img {
             width: 250px;
             height: auto;
@@ -113,6 +101,7 @@
         .place-text p:last-child {
             margin-bottom: 0;
         }
+        /* Адаптивность для мобильных устройств */
         @media (max-width: 650px) {
             .place-card {
                 flex-direction: column;
@@ -122,9 +111,6 @@
                 width: 100%;
                 max-width: 400px;
             }
-            #map {
-                height: 300px;
-            }
         }
     </style>
 </head>
@@ -133,16 +119,13 @@
     <h1>Заброшки Краснодарского края</h1>
     <p class="subtitle">Исследуем самые интересные, загадочные и покинутые места Кубани: от старых советских санаториев и усадеб до военных бункеров и кораблей, выброшенных на берег.</p>
     
-    <!-- Интерактивная карта Яндекс -->
-    <div id="map"></div>
-
     <!-- Кнопка переключения списка -->
     <div id="toggleBtn" class="button" onclick="showPlaces()">Смотреть список мест</div>
 
     <div id="placesBlock" class="places-list">
         
-        <!-- Первая заброшка -->
-        <div class="place-card" id="place-gubernskogo">
+        <!-- Первая заброшка: Губернского, 6 -->
+        <div class="place-card">
             <img src="images.jpeg" alt="Здание на ул. Губернского" class="place-img">
             <div class="place-info">
                 <div class="place-title">Здание на ул. Губернского, 6 (Новороссийск)</div>
@@ -152,8 +135,8 @@
             </div>
         </div>
         
-        <!-- Вторая заброшка -->
-        <div class="place-card" id="place-tobolskaya">
+        <!-- Вторая заброшка: Тобольская -->
+        <div class="place-card">
             <img src="imageszab1.jpeg" alt="Недострой на ул. Тобольской" class="place-img">
             <div class="place-info">
                 <div class="place-title">Недостроенная многоэтажка на ул. Тобольской (Новороссийск)</div>
@@ -163,8 +146,8 @@
             </div>
         </div>
 
-        <!-- Третья заброшка -->
-        <div class="place-card" id="place-vidova">
+        <!-- Третья заброшка: Видова и Щорса -->
+        <div class="place-card">
             <img src="imageszab2.jpeg" alt="Недострой на Видова и Щорса" class="place-img">
             <div class="place-info">
                 <div class="place-title">Перекресток Видова и Щорса (Новороссийск)</div>
@@ -175,8 +158,8 @@
             </div>
         </div>
         
-        <!-- Четвертая заброшка -->
-        <div class="place-card" id="place-depo">
+        <!-- Четвертая заброшка: Троллейбусное депо -->
+        <div class="place-card">
             <img src="zab4.jpeg" alt="Заброшенное троллейбусное депо" class="place-img">
             <div class="place-info">
                 <div class="place-title">Заброшенное троллейбусное депо в Южном районе (Новороссийск)</div>
@@ -187,8 +170,8 @@
             </div>
         </div>
 
-        <!-- Пятая заброшка -->
-        <div class="place-card" id="place-oktyabr">
+        <!-- Пятая заброшка: Цементный завод Октябрь -->
+        <div class="place-card">
             <img src="zab3.jpeg" alt="Заброшенный завод Октябрь" class="place-img">
             <div class="place-info">
                 <div class="place-title">Заброшенный цементный завод «Октябрь» (Восточный район)</div>
@@ -201,27 +184,23 @@
 
     </div>
 
-    <!-- JavaScript для управления видимостью списка и инициализации карты -->
+    <!-- JavaScript для управления видимостью списка -->
     <script>
-        // Функция переключения списка мест
         function showPlaces() {
             var block = document.getElementById("placesBlock");
             var btn = document.getElementById("toggleBtn");
             
+            // Переключаем класс .show у блока со списком
             block.classList.toggle("show");
             
+            // Меняем текст кнопки в зависимости от состояния
             if (block.classList.contains("show")) {
                 btn.textContent = "Скрыть список мест";
             } else {
                 btn.textContent = "Смотреть список мест";
             }
         }
+    </script>
 
-        // Инициализация Яндекс Карт
-        ymaps.ready(init);
-        function init(){
-            // Создание карты с центром в Новороссийске
-            var myMap = new ymaps.Map("map", {
-                center: [44.7244, 37.7675],
-                zoom: 12,
-                controls: ['zoomControl', 'fullscreenControl']
+</body>
+</html>
