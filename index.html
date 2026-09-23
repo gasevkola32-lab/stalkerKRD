@@ -72,20 +72,17 @@
             border: 2px solid #ff6b6b;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
+        
+        /* ИСПРАВЛЕННЫЙ БЛОК: Ограничение высоты убрано для корректного скролла на смартфонах */
         .places-list {
             max-width: 800px;
             margin: 40px auto 0 auto;
-            opacity: 0;
-            visibility: hidden;
-            max-height: 0;
-            overflow: hidden;
-            transition: opacity 0.6s ease-in-out, max-height 0.6s ease-in-out, visibility 0.6s;
+            display: none;
         }
         .places-list.show {
-            opacity: 1;
-            visibility: visible;
-            max-height: 4500px; 
+            display: block;
         }
+        
         .place-card {
             background-color: #333;
             margin-bottom: 30px;
@@ -166,7 +163,7 @@
             <div class="place-info">
                 <div class="place-title">Здание на ул. Губернского, 6 (Новороссийск)</div>
                 <div class="place-text">
-                    <p>Полуразрушенное заброшенное здание возвышается рядом с площадью Героев на улице Губернского, 6. Там выбиты почти все стёкла, уже отсутствуют куски стен. Несколько раз здесь случались немаленькие пожары.</p>
+                    <p>Полуразрушенное заброшенное здание возвышается рядом с площадью Героев на улице Губернского, 6. Там выбиты почти все стёкла, уже отсутствуют куски стен. Несколько раз здесь случаছিলেন немаленькие пожары.</p>
                 </div>
             </div>
         </div>
@@ -197,7 +194,7 @@
             <div class="place-info">
                 <div class="place-title">Заброшенное троллейбусное депо в Южном районе (Новороссийск)</div>
                 <div class="place-text">
-                    <p>По сравнению с Приморским и Центральным, Южный运行 прилично. Но всю картину портит здание заброшенного троллейбусного депо на улице Хворостянского.</p>
+                    <p>По сравнению с Приморским и Центральным, Южный район выглядит довольно прилично. Но всю картину портит здание заброшенного троллейбусного депо на улице Хворостянского.</p>
                     <p>В конце 80-х годов здесь начали строительство второго депо в Новороссийске: возвели производственные корпуса, административное здание, подвели контактную сеть. В начале 90-х строительство было прекращено. Здания обветшали, контактная сеть демонтирована. Пару лет назад по соседству с несостоявшимся депо построили небоскребы. Теперь местные жители жалуются, что к ним во двор летит мусор с территории заброшки и приходят в гости крысы.</p>
                 </div>
             </div>
@@ -208,14 +205,14 @@
             <div class="place-info">
                 <div class="place-title">Заброшенный цементный завод «Октябрь» (Восточный район)</div>
                 <div class="place-text">
-                    <p>Один из самых грандиозных и монументальных памятников советской индустриальной эпохи на Кубани. С самого момента основания завод непрерывно наращивал мощности, модернизировал оборудование и в свои лучшие годы считался одним из самых передовых и эффективных производства цемента во всем мире. На пике своей активности предприятие выдавало колоссальные объемы продукции.</p>
+                    <p>Один из самых грандиозных и монументальных памятников советской индустриальной эпохи на Кубани. С самого момента основания завод непрерывно наращивал мощности, модернизировал оборудование и в свои лучшие годы считался одним из самых передовых и эффективных производств цемента во всем мире. На пике своей активности предприятие выдавало колоссальные объемы продукции.</p>
                     <p>Однако после распада СССР и затяжного экономического кризиса завод не смог адаптироваться к новым рыночным условиям. Производство постепенно сокращалось, пока окончательно не остановилось. Сейчас гигантские цеха, массивные силосные башни и индустриальные постройки привлекают лишь любителей промышленного туризма.</p>
                 </div>
             </div>
         </div>
 
         <div class="place-card" id="golicyn" onclick="focusOnPlace('golicyn')">
-            <img src="images12.jpeg" alt="Дача князя Голицына" class="place-img">
+            <img src="images.jpeg" alt="Дача князя Голицына" class="place-img">
             <div class="place-info">
                 <div class="place-title">Дача князя Бориса Голицына (Новороссийск)</div>
                 <div class="place-text">
@@ -224,9 +221,8 @@
             </div>
         </div>
 
-        <!-- КАРТОЧКА СУХОГРУЗА РИО -->
         <div class="place-card" id="rio" onclick="focusOnPlace('rio')">
-            <img src="zab8.jpeg" alt="Сухогруз Рио" class="place-img">
+            <img src="rio.jpeg" alt="Сухогруз Рио" class="place-img">
             <div class="place-info">
                 <div class="place-title">Сухогруз «Рио» (Кабардинка)</div>
                 <div class="place-text">
@@ -235,12 +231,10 @@
             </div>
         </div>
 
-    </div>
-
     <script type="text/javascript">
         var myMap;
         
-        // Координаты заброшек (включая Сухогруз Рио)
+        // База координат для всех добавленных мест
         var placemarksData = {
             gubernskogo: [44.7214, 37.7772],
             tobolskaya: [44.7005, 37.7348],
@@ -251,38 +245,38 @@
             rio: [44.620046, 37.914428]
         };
 
-        // Инициализация карты Яндекс
+        // Подгрузка и настройка Яндекс.Карты
         ymaps.ready(function () {
             myMap = new ymaps.Map('map', {
-                center: [44.69, 37.80], // Немного сместили центр, чтобы Кабардинку тоже было хорошо видно
+                center: [44.69, 37.80], // Сбалансированный центр между Новороссийском и Кабардинкой
                 zoom: 11,
                 controls: ['zoomControl', 'fullscreenControl']
             });
 
-            // Добавление меток на карту
+            // Установка меток
             myMap.geoObjects.add(new ymaps.Placemark(placemarksData.gubernskogo, { balloonContent: 'Здание на ул. Губернского, 6' }));
             myMap.geoObjects.add(new ymaps.Placemark(placemarksData.tobolskaya, { balloonContent: 'Недострой на ул. Тобольской' }));
             myMap.geoObjects.add(new ymaps.Placemark(placemarksData.vidova, { balloonContent: 'Перекресток Видова и Щорса' }));
             myMap.geoObjects.add(new ymaps.Placemark(placemarksData.depo, { balloonContent: 'Заброшенное троллейбусное депо' }));
             myMap.geoObjects.add(new ymaps.Placemark(placemarksData.oktyabr, { balloonContent: 'Заброшенный завод Октябрь' }));
             myMap.geoObjects.add(new ymaps.Placemark(placemarksData.golicyn, { balloonContent: 'Дача князя Бориса Голицына' }));
-            myMap.geoObjects.add(new ymaps.Placemark(placemarksData.rio, { balloonContent: 'Сухогруз «Рио» в Кабардинке' }));
+            myMap.geoObjects.add(new ymaps.Placemark(placemarksData.rio, { balloonContent: 'Сухогруз Рио (Кабардинка)' }));
         });
 
-        // Функция открытия и закрытия списка мест
+        // Открытие / скрытие списка
         function showPlaces() {
             var block = document.getElementById('placesBlock');
             var btn = document.getElementById('toggleBtn');
-            if (block.classList.contains('show')) {
-                block.classList.remove('show');
+            if (block.style.display === 'block') {
+                block.style.display = 'none';
                 btn.innerText = 'Смотреть список мест';
             } else {
-                block.classList.add('show');
+                block.style.display = 'block';
                 btn.innerText = 'Скрыть список мест';
             }
         }
 
-        // Функция фокусировки карты на выбранном месте
+        // Перемещение карты к объекту при клике на карточку
         function focusOnPlace(id) {
             if (myMap && placemarksData[id]) {
                 myMap.setCenter(placemarksData[id], 15, {
