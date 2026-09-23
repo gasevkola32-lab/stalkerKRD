@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Заброшенные места Краснодарского края</title>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #2b2b2b;
+            color: #e0e0e0;
+            text-align: center;
+            padding: 50px 20px;
+        }
+        h1 { 
+            color: #ff6b6b; 
+            font-size: 38px; 
+            text-shadow: 2px 2px 4px #000;
+            margin-bottom: 10px;
+        }
+        p.subtitle { 
+            color: #b0b0b0; 
+            font-size: 20px; 
+            max-width: 600px;
+            margin: 20px auto;
+            line-height: 1.6;
+        }
+        .button {
+            display: inline-block;
+            background-color: #444;
+            color: #ff6b6b;
+            padding: 14px 28px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #ff6b6b;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .button:hover { 
+            background-color: #ff6b6b; 
+            color: #2b2b2b;
+        }
+        /* Стили для карты и применение CSS-фильтров для темной темы */
+        #map {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            margin: 30px auto;
+            border-radius: 6px;
+            border: 2px solid #ff6b6b;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            background-color: #1f1f1f;
+        }
+        /* Фильтры Яндекс Карт для темной темы (инверсия, изменение оттенка, снижение яркости) */
+        #map [class*="ymaps-2-1-"][class*="-map"] {
+            filter: invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%) saturate(80%);
+            -webkit-filter: invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%) saturate(80%);
+        }
+        /* Возвращаем оригинальные цвета для картинок и контролов внутри карты, чтобы они не инвертировались */
+        #map [class*="ymaps-2-1-"][class*="-controls"],
+        #map [class*="ymaps-2-1-"][class*="-balloon"],
+        #map [class*="ymaps-2-1-"][class*="-copyright"],
+        #map [class*="ymaps-2-1-"][class*="-hint"] {
+            filter: invert(0%) hue-rotate(0deg) !important;
+            -webkit-filter: invert(0%) hue-rotate(0deg) !important;
+        }
+        /* Стилизация балуна под темную тему */
+        .ymaps-2-1-79-balloon {
+            background-color: #333333 !important;
+            color: #e0e0e0 !important;
+            border: 1px solid #ff6b6b !important;
+        }
+        .ymaps-2-1-79-balloon__content {
+            background-color: #333333 !important;
+            color: #e0e0e0 !important;
+        }
+        .ymaps-2-1-79-balloon__tail:after {
+            background-color: #333333 !important;
+        }
+        
+        .places-list {
+            max-width: 800px;
+            margin: 40px auto 0 auto;
+            opacity: 0;
+            visibility: hidden;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.6s ease-in-out, max-height 0.6s ease-in-out, visibility 0.6s;
+        }
+        .places-list.show {
+            opacity: 1;
+            visibility: visible;
+            max-height: 2500px; 
+        }
+        .place-card {
+            background-color: #333;
+            margin-bottom: 30px;
+            border-radius: 6px;
+            border-left: 4px solid #ff6b6b;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            text-align: left;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .place-card:hover {
+            transform: translateX(5px);
+            background-color: #3d3d3d;
+        }
+        .place-img {
+            width: 250px;
+            height: auto;
+            border-radius: 4px;
+            flex-shrink: 0;
+            border: 1px solid #444;
+        }
+        .place-info {
+            flex-grow: 1;
+        }
+        .place-title {
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        .place-text {
+            color: #cccccc;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .place-text p {
+            margin: 0 0 10px 0;
+        }
+        .place-text p:last-child {
+            margin-bottom: 0;
+        }
+        @media (max-width: 650px) {
+            .place-card {
+                flex-direction: column;
+                align-items: center;
+            }
+            .place-img {
+                width: 100%;
+                max-width: 400px;
+            }
+            #map {
+                height: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Заброшки Краснодарского края</h1>
+    <p class="subtitle">Исследуем самые интересные, загадочные и покинутые места Кубани: от старых советских санаториев и усадеб до военных бункеров и кораблей, выброшенных на берег.</p>
+    
+    <div id="map"></div>
+
+    <div id="toggleBtn" class="button" onclick="showPlaces()">Смотреть список мест</div>
+
+    <div id="placesBlock" class="places-list">
+        
+        <div class="place-card" id="gubernskogo">
+            <img src="images.jpeg" alt="Здание на ул. Губернского" class="place-img">
+            <div class="place-info">
+                <div class="place-title">Здание на ул. Губернского, 6 (Новороссийск)</div>
+                <div class="place-text">
+                    <p>Полуразрушенное заброшенное здание возвышается рядом с площадью Героев на улице Губернского, 6. Там выбиты почти все стёкла, уже отсутствуют куски стен. Несколько раз здесь случались немаленькие пожары.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="place-card" id="tobolskaya">
+            <img src="imageszab1.jpeg" alt="Недострой на ул. Тобольской" class="place-img">
+            <div class="place-info">
+                <div class="place-title">Недостроенная многоэтажка на ул. Тобольской (Новороссийск)</div>
+                <div class="place-text">
+                    <p>Одна из самых внушительных заброшек Новороссийска находится на улице Тобольской рядом с пенсионным фондом. В 2008 году началось строительство многоэтажки, квартиры которой предназначались для семей военнослужащих. Не хватило финансирования. А в 2012 году закончился и срок аренды земельного участка под домом. Теперь объект надо сносить. Но сделать это в плотно заселённом микрорайоне крайне тяжело.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="place-card" id="vidova">
+            <img src="imageszab2.jpeg" alt="Недострой на Видова и Щорса" class="place-img">
+            <div class="place-info">
+                <div class="place-title">Перекресток Видова и Щорса (Новороссийск)</div>
+                <div class="place-text">
+                    <p>Еще одна «заброшка», куда солиднее – высотой в четыре этажа, находится на пересечении Видова и Щорса. Местные жители часто жаловались на сборища бомжей, крики и пьяные драки в недостроенном здании. Сейчас оно окружено забором из металлопрофиля, но выглядит ограждение совсем ненадежно. При малейшем дуновении ветерка лист издает зловещий скрип, от которого по коже бегут мурашки.</p>
+                    <p>В 2008 году здесь началось строительство 9-этажного дома. Но работы остановились. Когда начиналось строительство, у будущей многоэтажки было два собственника: один арендовал земельный участок, второй вкладывал средства в стройку. Но в ходе возведения дома возникли проблемы с документацией, затянулись сроки. В конечном итоге у первого закончился срок аренды земли, а второй перестал финансировать.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="place-card" id="depo">
+            <img src="zab4.jpeg" alt="Заброшенное троллейбусное депо" class="place-img">
+            <div class="place-info">
+                <div class="place-title">Заброшенное троллейбусное депо в Южном районе (Новороссийск)</div>
+                <div class="place-text">
+                    <p>По сравнению с Приморским и Центральным, Южный район выглядит довольно прилично. Но всю картину портит здание заброшенного троллейбусного депо на улице Хворостянского.</p>
+                    <p>В конце 80-х годов здесь начали строительство второго депо в Новороссийске: возвели производственные корпуса, административное здание, подвели контактную сеть. В начале 90-х строительство было прекращено. Здания обветшали, контактная сеть демонтирована. Пару лет назад по соседству с несостоявшимся депо построили небоскребы. Теперь местные жители жалуются, что к ним во двор летит мусор с территории заброшки и приходят в гости крысы.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="place-card" id="oktyabr">
+            <img src="zab3.jpeg" alt="Заброшенный завод Октябрь" class="place-img">
+            <div class="place-info">
+                <div class="place-title">Заброшенный цементный завод «Октябрь» (Восточный район)</div>
+                <div class="place-text">
+                    <p>Один из самых грандиозных и монументальных памятников советской индустриальной эпохи на Кубани. С самого момента основания завод непрерывно наращивал мощности, модернизировал оборудование и в свои лучшие годы считался одним из самых передовых и эффективных производства цемента во всем мире. На пике своей активности предприятие выдавало колоссальные объемы продукции.</p>
+                    <p>Однако после распада СССР и затяжного экономического кризиса завод не смог адаптироваться к новым рыночным условиям. Производство постепенно сокращалось, пока окончательно не остановилось. Сейчас гигантские цеха, массивные силосные башни и индустриальные постройки привлекают лишь любителей промышленного туризма.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="place-card" id="golicyn">
+            <img src="images.jpeg" alt="Дача князя Голицына" class="place-img">
+            <div class="place-info">
+                <div class="place-title">Дача князя Бориса Голицына (Новороссийск)</div>
+                <div class="place-text">
+                    <p>Живописные «графские развалины» старинного мини-дворца конца XIX века, некогда принадлежавшего известному ученому-физику. Находится в районе Сухумского шоссе, по пути на гору Сахарная голова. Сейчас заброшенный усадебный комплекс превратился в атмосферные каменные руины, окруженные густой зеленью.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        // Глобальный объект карты и словарь меток
+        var myMap;
+        var placemarks = {};
+
+        function showPlaces() {
+            var block = document.getElementById("placesBlock");
+            var btn = document.getElementById("toggleBtn");
+            block.classList.toggle("show");
+            if (block.classList.contains("show")) {
+                btn.textContent = "Скрыть список мест";
+            } else {
+                btn.textContent = "Смотреть список мест";
+            }
+        }
+
+        ymaps.ready(init);
+        function init(){
+            myMap = new ymaps.Map("map", {
+                center: [44.7244, 37.7675],
+                zoom: 12,
+                controls: ['zoomControl', 'fullscreenControl']
+            });
+
+            var locations = [
+                { id: "gubernskogo", coords: [44.7223, 37.7796], title: "Ул. Губернского, 6", desc: "Полуразрушенное заброшенное здание рядом с площадью Героев." },
+                { id: "tobolskaya", coords: [44.7317, 37.7425], title: "Недострой на ул. Тобольской", desc: "Внушительный заброшенный жилой комплекс для военных." },
+                { id: "vidova", coords: [44.7297, 37.7523], title: "Видова / Щорса", desc: "4-этажный недостроенный дом, огражденный забором." },
+                { id: "depo", coords: [44.6859, 37.7749], title: "Троллейбусное депо", desc: "Заброшенный объект на улице Хворостянского." },
+                { id: "oktyabr", coords: [44.7345, 37.8078], title: "Цементный завод «Октябрь»", desc: "Монументальный памятник советской индустриальной эпохи." },
+                { id: "golicyn", coords: [44.7291, 37.8286], title: "Дача князя Голицына", desc: "Атмосферные каменные руины старинной усадьбы конца XIX века." }
+            ];
+
+            locations.forEach(function(place) {
+                var placemark = new ymaps.Placemark(place.coords, {
+                    balloonContentHeader: '<strong style="color:#ff6b6b;">' + place.title + '</strong>',
+                    balloonContentBody: place.desc,
+                    hintContent: place.title
+                }, {
+                    preset: 'islands#redDotIcon'
+                });
+
+                // Сохраняем ссылку на метку для обратной связи
+                placemarks[place.id] = placemark;
+
+                // Клик на метку: открываем список и скроллим к карточке
+                placemark.events.add('click', function () {
+                    var block = document.getElementById("placesBlock");
+                    if (!block.classList.contains("show")) {
+                        showPlaces();
+                    }
+                    setTimeout(function() {
+                        var element = document.getElementById(place.id);
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 300);
+                });
+
+                myMap.geoObjects.add(placemark);
+            });
+
+            // Настройка обратной связи: Клик на карточку в списке центрирует карту и открывает балун
+            locations.forEach(function(place) {
+                var card = document.getElementById(place.id);
+                if (card) {
+                    card.addEventListener('click', function() {
+                        // Центрируем карту на объекте
+                        myMap.panTo(place.coords, {
+                            flying: true,
+                            duration: 800
+                        }).then(function() {
+                            // Открываем балун метки после завершения движения
+                            if (placemarks[place.id]) {
+                                placemarks[place.id].balloon.open();
+                            }
+                        });
+                        
+                        // Плавно скроллим к самой карте, чтобы пользователь её видел
+                        document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    });
+                }
+            });
+
+            myMap.behaviors.disable('scrollZoom');
+        }
+    </script>
+</body>
+</html>
