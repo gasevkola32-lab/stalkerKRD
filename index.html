@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <body>
-    <header>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Заброшенные места Краснодарского края</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <style>
@@ -14,16 +13,17 @@
             text-align: center;
             padding: 50px 20px;
         }
-        /* КРАСИВАЯ КНОПКА ДЛЯ ПК И МОБИЛЬНЫХ */
+        /* СТИЛИ КНОПКИ ПРОФИЛЯ */
         .btn-profile {
             display: inline-block;
             background-color: #333;
             color: #ff6b6b;
-            padding: 10px 20px;
+            padding: 12px 24px;
             text-decoration: none;
             border-radius: 4px;
             font-weight: bold;
-            margin-bottom: 30px;
+            margin-top: 10px;
+            margin-bottom: 25px;
             border: 2px solid #ff6b6b;
             transition: 0.3s;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
@@ -148,6 +148,12 @@
 <body>
 
     <h1>Заброшки Краснодарского края</h1>
+    
+    <!-- САМА КНОПКА ТЕПЕРЬ ТУТ: Видна на ПК прямо под главным заголовком -->
+    <div>
+        <a href="./profile/" class="btn-profile">👤 Мой Профиль Сталкера</a>
+    </div>
+
     <p class="subtitle">Исследуем самые интересные, загадочные и покинутые места Кубани: от старых советских санаториев и усадеб до военных бункеров и кораблей, выброшенных на берег.</p>
     
     <div id="map"></div>
@@ -198,106 +204,7 @@
             </div>
         </div>
 
-        <div class="place-card" id="oktyabr" onclick="focusOnPlace('oktyabr')">
-            <img src="zab3.jpeg" alt="Заброшенный завод Октябрь" class="place-img">
-            <div class="place-info">
-                <div class="place-title">Заброшенный цементный завод «Октябрь» (Восточный район)</div>
-                <div class="place-text">
-                    <p>Один из самых грандиозных и монументальных памятников советской индустриальной эпохи на Кубани. С самого момента основания завод непрерывно наращивал мощности, модернизировал оборудование и в свои лучшие годы считался одним из самых передовых и эффективных производств цемента во всем мире. На пике своей активности предприятие выдавало колоссальные объемы продукции.</p>
-                    <p>Однако после распада СССР и затяжного экономического кризиса завод не смог адаптироваться к новым рыночным условиям. Производство постепенно сокращалось, пока окончательно не остановилось. Сейчас гигантские цеха, массивные силосные башни и индустриальные постройки привлекают лишь любителей промышленного туризма.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="place-card" id="golicyn" onclick="focusOnPlace('golicyn')">
-            <img src="zab7.jpeg" alt="Дача князя Голицына" class="place-img">
-            <div class="place-info">
-                <div class="place-title">Дача князя Бориса Голицына (Новороссийск)</div>
-                <div class="place-text">
-                    <p>Живописные «графские развалины» старинного мини-дворца конца XIX века, некогда принадлежавшего известному ученому-физику. Находится в районе Сухумского шоссе, по пути на гору Сахарная голова. Сейчас заброшенный усадебный комплекс превратился в атмосферные каменные руины, окруженные густой зеленью.</p>
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <script type="text/javascript">
-        var myMap;
-        var placemarks = {};
-
-        function showPlaces() {
-            var block = document.getElementById("placesBlock");
-            var btn = document.getElementById("toggleBtn");
-            block.classList.toggle("show");
-            if (block.classList.contains("show")) {
-                btn.textContent = "Скрыть список мест";
-            } else {
-                btn.textContent = "Смотреть список мест";
-            }
-        }
-
-        ymaps.ready(init);
-        function init(){
-            myMap = new ymaps.Map("map", {
-                center: [44.7244, 37.7675],
-                zoom: 12,
-                controls: ['zoomControl', 'fullscreenControl']
-            });
-
-            var locations = [
-                { id: "gubernskogo", coords: [44.7223, 37.7796], title: "Ул. Губернского, 6", desc: "Полуразрушенное заброшенное здание рядом с площадью Героев." },
-                { id: "tobolskaya", coords: [44.7317, 37.7425], title: "Недострой на ул. Тобольской", desc: "Внушительный заброшенный жилой комплекс для военных." },
-                { id: "vidova", coords: [44.7297, 37.7523], title: "Видова / Щорса", desc: "4-этажный недостроенный дом, огражденный забором." },
-                { id: "depo", coords: [44.6859, 37.7749], title: "Троллейбусное депо", desc: "Заброшенный объект на улице Хворостянского." },
-                { id: "oktyabr", coords: [44.7345, 37.8078], title: "Цементный завод «Октябрь»", desc: "Монументальный памятник советской индустриальной эпохи." },
-                { id: "golicyn", coords: [44.7291, 37.8286], title: "Дача князя Голицына", desc: "Живописные «графские развалины» замка конца XIX века." }
-            ];
-
-            locations.forEach(function(place) {
-                var placemark = new ymaps.Placemark(place.coords, {
-                    balloonContentHeader: '<strong style="color:#ff6b6b;">' + place.title + '</strong>',
-                    balloonContentBody: place.desc,
-                    hintContent: place.title
-                }, {
-                    preset: 'islands#redDotIcon'
-                });
-
-                placemark.events.add('click', function () {
-                    var block = document.getElementById("placesBlock");
-                    if (!block.classList.contains("show")) {
-                        showPlaces();
-                    }
-                    setTimeout(function() {
-                        var element = document.getElementById(place.id);
-                        if (element) {
-                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    }, 300);
-                });
-
-                myMap.geoObjects.add(placemark);
-                placemarks[place.id] = placemark;
-            });
-
-            myMap.behaviors.disable('scrollZoom');
-        }
-
-        function focusOnPlace(id) {
-            if (myMap && placemarks[id]) {
-                var placemark = placemarks[id];
-                var coords = placemark.geometry.getCoordinates();
-                
-                myMap.panTo(coords, { flying: true, duration: 1000 }).then(function() {
-                    myMap.setZoom(14, { duration: 500 });
-                    placemark.balloon.open();
-                });
-
-                var mapElement = document.getElementById("map");
-                if (mapElement) {
-                    mapElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }
-        }
-    </script>
 </body>
 </html>
